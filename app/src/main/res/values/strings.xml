@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Random String Generator</string>
+    <string name="string_length">Enter String Length</string>
+    <string name="generate">Generate</string>
+    <string name="generating_random_string">Generating random string...</string>
+    <string name="clear_all">Clear All</string>
+    <string name="delete">Delete</string>
+    <string name="created">Created: %1$s</string>
+    <string name="length">Length: %1$s</string>
+    <string name="value">Value: %1$s</string>
+</resources>
