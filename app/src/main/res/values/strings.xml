@@ -8,4 +8,7 @@
     <string name="created">Created: %1$s</string>
     <string name="length">Length: %1$s</string>
     <string name="value">Value: %1$s</string>
+    <string name="favorite">favourite</string>
+    <string name="not_favorite">Not favourite</string>
+    <string name="only_favourite">Filter by Favourite</string>
 </resources>

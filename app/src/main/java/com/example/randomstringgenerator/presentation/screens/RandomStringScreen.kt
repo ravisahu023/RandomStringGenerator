@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.randomstringgenerator.R
 import com.example.randomstringgenerator.domain.model.RandomStringItem
@@ -52,7 +53,6 @@ fun RandomStringScreen(viewModel: RandomStringViewModel) {
             .padding(WindowInsets.systemBars.asPaddingValues())
             .padding(16.dp)
     ) {
-
         Text(
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.headlineMedium
@@ -114,9 +114,18 @@ fun RandomStringScreen(viewModel: RandomStringViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Button(
+            onClick = { viewModel.filterByFav() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(stringResource(R.string.only_favourite))
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         LazyColumn {
             items(strings.size) { item ->
-                RandomStringItemCard(item = strings.get(item), onDelete = {
+                RandomStringItemCard(item = strings.get(item), markFav = { viewModel.markFavourite(it) }, onDelete = {
                     viewModel.deleteItem(it)
                 })
             }
@@ -128,7 +137,11 @@ fun RandomStringScreen(viewModel: RandomStringViewModel) {
 }
 
 @Composable
-fun RandomStringItemCard(item: RandomStringItem, onDelete: (RandomStringItem) -> Unit) {
+fun RandomStringItemCard(
+    item: RandomStringItem,
+    markFav: (RandomStringItem) -> Unit,
+    onDelete: (RandomStringItem) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -138,6 +151,11 @@ fun RandomStringItemCard(item: RandomStringItem, onDelete: (RandomStringItem) ->
             Text(stringResource(R.string.value, item.value))
             Text(stringResource(R.string.length, item.length))
             Text(stringResource(R.string.created, Utility.formatIsoDate(item.created)))
+            Button(
+                onClick = { markFav(item) }, modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text(stringResource(if(item.isFavourite) R.string.favorite else R.string.not_favorite))
+            }
             Button(
                 onClick = { onDelete(item) }, modifier = Modifier.padding(top = 8.dp)
             ) {

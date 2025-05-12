@@ -1,6 +1,7 @@
 package com.example.randomstringgenerator.presentation.viewmodel
 
 import android.util.Log
+import androidx.compose.ui.util.fastFilter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.randomstringgenerator.data.repository.RandomStringRepository
@@ -9,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +20,7 @@ class RandomStringViewModel @Inject constructor(
     private val repository: RandomStringRepository
 ) : ViewModel() {
 
-    private val _randomStrings = MutableStateFlow<List<RandomStringItem>>(emptyList())
+    private var _randomStrings = MutableStateFlow<List<RandomStringItem>>(emptyList())
     val randomStrings: StateFlow<List<RandomStringItem>> = _randomStrings
 
     private val _isLoading = MutableStateFlow(false)
@@ -51,6 +54,24 @@ class RandomStringViewModel @Inject constructor(
 
     fun clearAll() {
         _randomStrings.value = emptyList()
+    }
+
+    fun filterByFav() {
+        _randomStrings.value = randomStrings.value.filter {
+            it.isFavourite
+        }
+        _randomStrings.update {
+            _randomStrings.value.filter { it.isFavourite }
+        }
+    }
+
+    fun markFavourite(item: RandomStringItem) {
+        randomStrings.value.forEach {
+            if (it.value == item.value) {
+                //found that item
+                it.isFavourite = !item.isFavourite
+            }
+        }
     }
 
 
